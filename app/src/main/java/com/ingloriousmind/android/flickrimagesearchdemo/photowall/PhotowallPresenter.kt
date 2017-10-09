@@ -81,7 +81,7 @@ class PhotowallPresenter : BasePresenter<PhotowallContract.View>(), PhotowallCon
                 .map { (photos) -> photos.photos.map { photo: Photo -> toPhotoItem(photo) } }
                 .doOnNext { cachedPhotoItems.addAll(it) }
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { photoItems ->
+                .subscribe { _ ->
                     this@PhotowallPresenter.view?.let {
                         it.showPhotoItems(cachedPhotoItems)
                         it.updateSearchQuery(query)

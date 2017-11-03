@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE
 import android.support.v7.widget.SearchView
 import android.view.Menu
 import com.ingloriousmind.android.flickrimagesearchdemo.R
@@ -42,6 +43,15 @@ class PhotowallActivity : AppCompatActivity(), PhotowallContract.View {
                 val shouldLoadMore = firstVisible + visibleCount >= totalCount
                 if (shouldLoadMore) {
                     presenter.onScrolledToEnd(totalCount)
+                }
+            }
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                if (newState == SCROLL_STATE_IDLE) {
+                    val layoutManager = recyclerView.layoutManager as GridLayoutManager
+                    val min = layoutManager.findFirstVisibleItemPosition()
+                    val max = layoutManager.findLastVisibleItemPosition()
+                    adapter.loadLargeImages(min, max)
                 }
             }
         })

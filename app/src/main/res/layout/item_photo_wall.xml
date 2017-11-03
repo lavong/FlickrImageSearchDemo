@@ -11,6 +11,7 @@
         android:id="@+id/item_photo_wall_image"
         android:layout_width="match_parent"
         android:layout_height="180dp"
+        android:scaleType="centerCrop"
         tools:src="@mipmap/ic_launcher" />
 
     <TextView

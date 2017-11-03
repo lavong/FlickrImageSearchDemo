@@ -5,6 +5,7 @@ import com.ingloriousmind.android.flickrimagesearchdemo.photowall.flickr.model.P
 
 data class PhotoItem(
         val label: String = "",
-        val imageUrl: String,
+        val imageUrlThumbnail: String,
+        val imageUrlLarge: String,
         val photo: Photo
 )

@@ -17,7 +17,8 @@ import timber.log.Timber
 class PhotowallPresenter : BasePresenter<PhotowallContract.View>(), PhotowallContract.Presenter {
 
     companion object FLICKR {
-        const val IMAGE_URL_FORMAT = "http://farm%s.static.flickr.com/%s/%s_%s.jpg" // http://farm{farm}.static.flickr.com/{server}/{id}_{secret}.jpg
+        const val IMAGE_URL_FORMAT_THUMBNAIL = "http://farm%s.static.flickr.com/%s/%s_%s_t.jpg" // http://farm{farm}.static.flickr.com/{server}/{id}_{secret}.jpg
+        const val IMAGE_URL_FORMAT_LARGE = "http://farm%s.static.flickr.com/%s/%s_%s_b.jpg" // https://www.flickr.com/services/api/flickr.photos.getSizes.html
         const val PAGE_SIZE = 100
         const val DEFAULT_QUERY = "kittens"
     }
@@ -43,8 +44,8 @@ class PhotowallPresenter : BasePresenter<PhotowallContract.View>(), PhotowallCon
     }
 
     override fun unbindView() {
-        super.unbindView()
         flickrDisposable?.dispose()
+        super.unbindView()
     }
 
     override fun onSearchQuery(query: String) {
@@ -68,8 +69,9 @@ class PhotowallPresenter : BasePresenter<PhotowallContract.View>(), PhotowallCon
 
     fun toPhotoItem(photo: Photo): PhotoItem {
         val label = photo.title
-        val url = String.format(FLICKR.IMAGE_URL_FORMAT, photo.farmId, photo.server, photo.id, photo.secret)
-        return PhotoItem(label, url, photo)
+        val urlThumbnail = String.format(FLICKR.IMAGE_URL_FORMAT_THUMBNAIL, photo.farmId, photo.server, photo.id, photo.secret)
+        val urlLarge = String.format(FLICKR.IMAGE_URL_FORMAT_LARGE, photo.farmId, photo.server, photo.id, photo.secret)
+        return PhotoItem(label, urlThumbnail, urlLarge, photo)
     }
 
     fun loadPhotos(query: String, page: Int) {
@@ -78,7 +80,7 @@ class PhotowallPresenter : BasePresenter<PhotowallContract.View>(), PhotowallCon
         currentPage = page
         flickrDisposable = flickrApi.fetchPhotos(query, page, FLICKR.PAGE_SIZE)
                 .subscribeOn(Schedulers.io())
-                .map { (photos) -> photos.photos.map { photo: Photo -> toPhotoItem(photo) } }
+                .map { (result) -> result.photos.map { photo: Photo -> toPhotoItem(photo) } }
                 .doOnNext { cachedPhotoItems.addAll(it) }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { _ ->

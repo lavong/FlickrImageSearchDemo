@@ -1,7 +1,6 @@
 package com.ingloriousmind.android.flickrimagesearchdemo.photowall
 
 import android.support.v7.widget.RecyclerView
-import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,12 +13,20 @@ import com.ingloriousmind.android.flickrimagesearchdemo.photowall.model.PhotoIte
 class PhotowallAdapter(val clickHandler: ClickHandler) : RecyclerView.Adapter<PhotowallAdapter.PhotoViewHolder>() {
 
     var items: MutableList<PhotoItem> = mutableListOf()
+    var largeImageRangeStart: Int = -1
+    var largeImageRangeEnd: Int = -1
 
     override fun onBindViewHolder(holder: PhotoViewHolder, pos: Int) {
         val photoItem = items.get(pos)
-        Glide.with(holder.image.context).load(photoItem.imageUrl).into(holder.image)
-        holder.label.visibility = if (TextUtils.isEmpty(photoItem.label)) View.GONE else View.VISIBLE
-        holder.label.text = photoItem.label
+        if (pos in largeImageRangeStart..largeImageRangeEnd) {
+            Glide.with(holder.image.context).load(photoItem.imageUrlLarge).into(holder.image)
+            holder.label.text = "large"
+        } else {
+            Glide.with(holder.image.context).load(photoItem.imageUrlThumbnail).into(holder.image)
+            holder.label.text = "small"
+        }
+//        holder.label.visibility = if (TextUtils.isEmpty(photoItem.label)) View.GONE else View.VISIBLE
+//        holder.label.text = photoItem.label
         holder.itemView.setOnClickListener { clickHandler.onPhotoClicked(photoItem, pos) }
     }
 
@@ -41,6 +48,12 @@ class PhotowallAdapter(val clickHandler: ClickHandler) : RecyclerView.Adapter<Ph
     fun clear() {
         items.clear()
         notifyDataSetChanged()
+    }
+
+    fun loadLargeImages(rangeStart: Int, rangeEnd: Int) {
+        this.largeImageRangeStart = rangeStart
+        this.largeImageRangeEnd = rangeEnd
+        notifyItemRangeChanged(rangeStart, rangeEnd)
     }
 
     inner class PhotoViewHolder(view: View) : RecyclerView.ViewHolder(view) {

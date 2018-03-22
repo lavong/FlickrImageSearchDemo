@@ -4,9 +4,6 @@ demo android application showing flickr images based on their image search api.
 
 ![](art/flickr-image-search-demo.gif "flickr image search demo")
 
-# test
-.
-
 #  License
 
     Copyright 2017 Lavong Soysavanh

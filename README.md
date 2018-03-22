@@ -1,5 +1,7 @@
 # FlickrImageSearchDemo
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/077d3a68f8f14961b0a9c76bc0e478ae)](https://app.codacy.com/app/lavong/FlickrImageSearchDemo?utm_source=github.com&utm_medium=referral&utm_content=lavong/FlickrImageSearchDemo&utm_campaign=badger)
+
 demo android application showing flickr images based on their image search api.
 
 ![](art/flickr-image-search-demo.gif "flickr image search demo")

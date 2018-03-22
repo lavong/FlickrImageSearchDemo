@@ -5,6 +5,9 @@ import com.bumptech.glide.GlideBuilder
 import com.bumptech.glide.load.engine.cache.LruResourceCache
 import timber.log.Timber
 
+/**
+ * the app.
+ */
 class FlickrImageSearchApp : Application() {
 
     override fun onCreate() {

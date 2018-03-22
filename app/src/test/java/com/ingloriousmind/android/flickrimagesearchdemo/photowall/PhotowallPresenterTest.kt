@@ -5,11 +5,20 @@ import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
+/**
+ * dummy tests
+ */
 class PhotowallPresenterTest {
 
+    /**
+     * unfailable
+     */
     @Test
     fun shouldAssertTautology() = assertTrue(23 < 42)
 
+    /**
+     * you know...
+     */
     @Test
     fun shouldConvertPhotoItem() {
         val presenter = PhotowallPresenter()

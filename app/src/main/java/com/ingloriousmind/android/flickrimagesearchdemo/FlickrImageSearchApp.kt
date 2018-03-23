@@ -5,7 +5,9 @@ import com.bumptech.glide.GlideBuilder
 import com.bumptech.glide.load.engine.cache.LruResourceCache
 import timber.log.Timber
 
-
+/**
+ * the app.
+ */
 class FlickrImageSearchApp : Application() {
 
     override fun onCreate() {
@@ -16,7 +18,7 @@ class FlickrImageSearchApp : Application() {
 
         GlideBuilder().setMemoryCache(LruResourceCache(10 * 1000 * 1000)).build(this)
 
-        Timber.v("application created")
+        Timber.v("it's on!")
     }
 
 }

@@ -44,13 +44,9 @@ class PhotowallAdapter(val clickHandler: ClickHandler) : RecyclerView.Adapter<Ph
     }
 
     inner class PhotoViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val image: ImageView
-        val label: TextView
+        val image: ImageView = view.findViewById(R.id.item_photo_wall_image) as ImageView
+        val label: TextView = view.findViewById(R.id.item_photo_wall_label) as TextView
 
-        init {
-            image = view.findViewById<ImageView>(R.id.item_photo_wall_image) as ImageView
-            label = view.findViewById<TextView>(R.id.item_photo_wall_label) as TextView
-        }
     }
 
     interface ClickHandler {

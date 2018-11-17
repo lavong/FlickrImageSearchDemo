@@ -17,16 +17,16 @@ import timber.log.Timber
 class PhotowallPresenter : BasePresenter<PhotowallContract.View>(), PhotowallContract.Presenter {
 
     companion object FLICKR {
-        const val IMAGE_URL_FORMAT = "http://farm%s.static.flickr.com/%s/%s_%s.jpg" // http://farm{farm}.static.flickr.com/{server}/{id}_{secret}.jpg
+        const val IMAGE_URL_FORMAT = "https://farm%s.static.flickr.com/%s/%s_%s.jpg" // https://farm{farm}.static.flickr.com/{server}/{id}_{secret}.jpg
         const val PAGE_SIZE = 100
         const val DEFAULT_QUERY = "kittens"
     }
 
-    val flickrApi: FlickrApi
-    var cachedPhotoItems: MutableList<PhotoItem> = mutableListOf()
-    var flickrDisposable: Disposable? = null
-    var currentPage = 1
-    var currentQuery = ""
+    private val flickrApi: FlickrApi
+    private var cachedPhotoItems: MutableList<PhotoItem> = mutableListOf()
+    private var flickrDisposable: Disposable? = null
+    private var currentPage = 1
+    private var currentQuery = ""
 
     init {
         flickrApi = Retrofit.Builder()
@@ -39,7 +39,7 @@ class PhotowallPresenter : BasePresenter<PhotowallContract.View>(), PhotowallCon
 
     override fun bindView(view: PhotowallContract.View) {
         super.bindView(view)
-        loadPhotos(FLICKR.DEFAULT_QUERY, 1)
+        loadPhotos(DEFAULT_QUERY, 1)
     }
 
     override fun unbindView() {
@@ -61,14 +61,14 @@ class PhotowallPresenter : BasePresenter<PhotowallContract.View>(), PhotowallCon
     }
 
     override fun onScrolledToEnd(currentIndex: Int) {
-        if (currentIndex / FLICKR.PAGE_SIZE == currentPage) {
+        if (currentIndex / PAGE_SIZE == currentPage) {
             loadPhotos(currentQuery, ++currentPage)
         }
     }
 
     fun toPhotoItem(photo: Photo): PhotoItem {
         val label = photo.title
-        val url = String.format(FLICKR.IMAGE_URL_FORMAT, photo.farmId, photo.server, photo.id, photo.secret)
+        val url = String.format(IMAGE_URL_FORMAT, photo.farmId, photo.server, photo.id, photo.secret)
         return PhotoItem(label, url, photo)
     }
 
@@ -76,7 +76,7 @@ class PhotowallPresenter : BasePresenter<PhotowallContract.View>(), PhotowallCon
         Timber.v("loading: query=$query, page=$page")
         currentQuery = query
         currentPage = page
-        flickrDisposable = flickrApi.fetchPhotos(query, page, FLICKR.PAGE_SIZE)
+        flickrDisposable = flickrApi.fetchPhotos(query, page, PAGE_SIZE)
                 .subscribeOn(Schedulers.io())
                 .map { (photos) -> photos.photos.map { photo: Photo -> toPhotoItem(photo) } }
                 .doOnNext { cachedPhotoItems.addAll(it) }

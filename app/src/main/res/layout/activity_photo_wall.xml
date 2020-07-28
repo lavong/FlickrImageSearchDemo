@@ -6,11 +6,11 @@
     android:layout_height="match_parent"
     tools:context="com.ingloriousmind.android.flickrimagesearchdemo.photowall.PhotowallActivity">
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/photowall_recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layoutManager="android.support.v7.widget.GridLayoutManager"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:spanCount="@integer/photowall_grid_span_count"
         tools:listitem="@layout/item_photo_wall" />
 

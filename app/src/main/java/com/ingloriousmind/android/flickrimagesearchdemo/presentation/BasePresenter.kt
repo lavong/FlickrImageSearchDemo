@@ -1,6 +1,6 @@
 package com.ingloriousmind.android.flickrimagesearchdemo.presentation
 
-import android.support.annotation.CallSuper
+import androidx.annotation.CallSuper
 
 abstract class BasePresenter<V : BaseContract.View> : BaseContract.Presenter<V> {
 

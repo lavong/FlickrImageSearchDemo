@@ -17,25 +17,22 @@ import timber.log.Timber
 class PhotowallPresenter : BasePresenter<PhotowallContract.View>(), PhotowallContract.Presenter {
 
     companion object FLICKR {
-        const val IMAGE_URL_FORMAT = "https://farm%s.static.flickr.com/%s/%s_%s.jpg" // https://farm{farm}.static.flickr.com/{server}/{id}_{secret}.jpg
+        // https://farm{farm}.static.flickr.com/{server}/{id}_{secret}.jpg
+        const val IMAGE_URL_FORMAT = "https://farm%s.static.flickr.com/%s/%s_%s.jpg"
         const val PAGE_SIZE = 100
         const val DEFAULT_QUERY = "kittens"
     }
 
-    private val flickrApi: FlickrApi
+    private val flickrApi: FlickrApi = Retrofit.Builder()
+        .baseUrl(BuildConfig.FLICKR_BASE_URL)
+        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+        .create(FlickrApi::class.java)
     private var cachedPhotoItems: MutableList<PhotoItem> = mutableListOf()
     private var flickrDisposable: Disposable? = null
     private var currentPage = 1
     private var currentQuery = ""
-
-    init {
-        flickrApi = Retrofit.Builder()
-                .baseUrl(BuildConfig.FLICKR_BASE_URL)
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
-                .create(FlickrApi::class.java)
-    }
 
     override fun bindView(view: PhotowallContract.View) {
         super.bindView(view)
@@ -77,16 +74,16 @@ class PhotowallPresenter : BasePresenter<PhotowallContract.View>(), PhotowallCon
         currentQuery = query
         currentPage = page
         flickrDisposable = flickrApi.fetchPhotos(query, page, PAGE_SIZE)
-                .subscribeOn(Schedulers.io())
-                .map { (photos) -> photos.photos.map { photo: Photo -> toPhotoItem(photo) } }
-                .doOnNext { cachedPhotoItems.addAll(it) }
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { _ ->
-                    this@PhotowallPresenter.view?.let {
-                        it.showPhotoItems(cachedPhotoItems)
-                        it.updateSearchQuery(query)
-                    }
+            .subscribeOn(Schedulers.io())
+            .map { (photos) -> photos.photos.map { photo: Photo -> toPhotoItem(photo) } }
+            .doOnNext { cachedPhotoItems.addAll(it) }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { _ ->
+                view?.let {
+                    it.showPhotoItems(cachedPhotoItems)
+                    it.updateSearchQuery(query)
                 }
+            }
     }
 
 }

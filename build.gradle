@@ -4,12 +4,12 @@ buildscript {
     ext.versions = [
             'androidx'  : '1.1.0',
             'kotlin'    : '1.3.72',
-            'retrofit'  : '2.3.0',
-            'gson'      : '2.8.2',
-            'timber'    : '4.5.1',
-            'glide'     : '4.0.0',
-            'rx'        : '2.1.4',
-            'rx_android': '2.0.1',
+            'retrofit'  : '2.9.0',
+            'gson'      : '2.8.6',
+            'timber'    : '4.7.1',
+            'glide'     : '4.11.0',
+            'rx'        : '2.2.19',
+            'rx_android': '2.1.1',
     ]
     repositories {
         google()
